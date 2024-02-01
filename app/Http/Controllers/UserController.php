@@ -17,7 +17,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'page' => 'integer',
             'size' => 'integer',
-            'sort_by' => 'in:firstName, lastName',
+            'sort_by' => 'in:firstName,lastName',
             'sort_dir' => 'in:asc,desc',
         ]);
 
@@ -43,7 +43,19 @@ class UserController extends Controller
         $result = [
             'status_code' => 200,
             'message' => 'OK',
-            'data' => $users,
+            'data' => $users->items(),
+            'meta' => [
+                'pagination' => [
+                    'total' => $users->total(),
+                    'count' => $users->count(),
+                    'per_page' => $users->perPage(),
+                    'current_page' => $users->currentPage(),
+                    'total_pages' => $users->lastPage(),
+                    'links' => [
+                        'next' => $users->nextPageUrl(),
+                    ],
+                ],
+            ],
         ];
 
         return response()->json($result, 200);
