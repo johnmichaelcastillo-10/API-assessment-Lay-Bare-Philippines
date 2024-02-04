@@ -15,11 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->unsignedBigInteger('product_manager_id');
+            $table->foreignId('product_manager_id')->constrained('users');
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('product_manager_id')->references('id')->on('users');
         });
     }
 

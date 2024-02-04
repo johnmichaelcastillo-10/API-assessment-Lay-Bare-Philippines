@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,9 +18,9 @@ class CategoriesFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->word(),
-            'description' => fake()->sentence(),
-            'product_manager_id' => fake()->numberBetween(1, 10),
+            'name' => $this->faker->unique()->word,
+            'description' => $this->faker->sentence,
+            'product_manager_id' => User::factory(),
         ];
     }
 }
