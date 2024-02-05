@@ -65,10 +65,12 @@ class AuthController extends Controller
 
 
         if (!$user || !Hash::check($fields['password'], $user->password)) {
-            return response([
+            return response()->json([
+                'status_code' => 401,
                 'message' => 'Bad Credentials'
             ], 401);
         }
+
 
         $token = $user->createToken('loginToken')->plainTextToken;
 
@@ -84,8 +86,9 @@ class AuthController extends Controller
     {
         auth()->user()->tokens()->delete();
 
-        return [
+        return response()->json([
+            'status_code' => 200,
             'message' => 'Logged out'
-        ];
+        ], 200);
     }
 }

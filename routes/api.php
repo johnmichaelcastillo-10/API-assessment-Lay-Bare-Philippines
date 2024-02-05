@@ -17,29 +17,28 @@ use App\Http\Controllers\CategoriesController;
 |
 */
 
-
-
-// Route::get('users/', [UserController::class, 'index']);
-Route::post('/users', [UserController::class, 'store']);
-Route::put('/users/{user}', [UserController::class, 'update']);
-Route::delete('/users/{user}', [UserController::class, 'destroy']);
-
-Route::get('/categories', [CategoriesController::class, 'index']);
-Route::post('/categories', [CategoriesController::class, 'store']);
-Route::put('/categories/{category}', [CategoriesController::class, 'update']);
-Route::delete('/categories/{category}', [CategoriesController::class, 'destroy']);
-
-Route::get('/products', [ProductController::class, 'index']);
-
-
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('users/', [UserController::class, 'index']);
+
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::get('/categories', [CategoriesController::class, 'index']);
+    Route::post('/categories', [CategoriesController::class, 'store']);
+    Route::put('/categories/{category}', [CategoriesController::class, 'update']);
+    Route::delete('/categories/{category}', [CategoriesController::class, 'destroy']);
+    Route::put('/categories/restore/{category}', [CategoriesController::class, 'restore']);
+
+
+    Route::get('/products', [ProductController::class, 'index']);
     Route::post('product', [ProductController::class, 'store']);
     Route::put('/product/{product}', [ProductController::class, 'update']);
     Route::delete('/product/{product}', [ProductController::class, 'destroy']);
     Route::put('/product/restore/{product}', [ProductController::class, 'restore']);
+
+    Route::post('/users', [UserController::class, 'store']);
+    Route::put('/users/{user}', [UserController::class, 'update']);
+    Route::delete('/users/{user}', [UserController::class, 'destroy']);
+    Route::put('/users/restore/{user}', [UserController::class, 'restore']);
 });
 
 

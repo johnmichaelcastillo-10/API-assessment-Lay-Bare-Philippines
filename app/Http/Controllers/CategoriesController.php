@@ -146,4 +146,32 @@ class CategoriesController extends Controller
             'message' => 'Category soft-deleted successfully',
         ], 200);
     }
+
+    public function restore(Request $request, $categoryId)
+    {
+        $category = Categories::withTrashed()->find($categoryId);
+
+        if (!$category) {
+            return response()->json([
+                'status_code' => 404,
+                'message' => 'Category not found',
+            ], 404);
+        }
+
+        if ($category->trashed()) {
+            $category->restore();
+
+            return response()->json([
+                'status_code' => 200,
+                'message' => 'Category restored successfully',
+                'data' => $category,
+            ], 200);
+        }
+
+        return response()->json([
+            'status_code' => 200,
+            'message' => 'Category is not soft-deleted',
+            'data' => $category,
+        ], 200);
+    }
 }

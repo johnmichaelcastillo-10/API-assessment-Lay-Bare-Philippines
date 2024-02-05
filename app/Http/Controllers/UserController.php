@@ -163,4 +163,15 @@ class UserController extends Controller
             'message' => 'User soft-deleted successfully',
         ], 200);
     }
+
+    public function restore(User $user)
+    {
+        $user->restore();
+
+        return response()->json([
+            'status_code' => 200,
+            'message' => 'User restored successfully',
+            'data' => $user,
+        ], 200);
+    }
 }

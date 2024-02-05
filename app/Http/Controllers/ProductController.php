@@ -83,7 +83,7 @@ class ProductController extends Controller
             ]);
         }
 
-        // Create the product
+
         $product = new Products();
         $product->name = $request->input('name');
         $product->sku = $request->input('sku');
@@ -92,19 +92,18 @@ class ProductController extends Controller
         $product->added_by = auth()->id();
         $product->save();
 
-        // Handle image upload
+
         $image = $request->file('image');
         $originalName = $image->getClientOriginalName();
-        $imageName = str_replace(' ', '-', $originalName); // Replace spaces with "-"
+        $imageName = str_replace(' ', '-', $originalName);
         $imagePath = $image->storeAs('images', $imageName, 'public');
 
-        // Update the product with the image path
         $product->image = $imagePath;
         $product->save();
 
 
 
-        // Retrieve category details for the response
+
         $category = Categories::find($product->category_id);
 
         $productDetails = [
@@ -112,7 +111,7 @@ class ProductController extends Controller
             'product_name' => $product->name,
             'product_sku' => $product->sku,
             'product_category_id' => $product->category_id,
-            'product_category' => $category->name, // Assuming there's a 'name' attribute in the Category model
+            'product_category' => $category->name,
             'product_description' => $product->description,
             'image_path' => $product->image,
         ];
@@ -151,37 +150,30 @@ class ProductController extends Controller
             ]);
         }
 
-        // Replace spaces with underscores in the SKU if provided
         if ($request->has('sku')) {
             $sku = str_replace(' ', '_', $request->input('sku'));
             $product->sku = $sku;
         }
 
-        // Handle image update and deletion of the old image
         if ($request->hasFile('image')) {
-            // Delete the old image
             if ($product->image) {
                 Storage::disk('public')->delete($product->image);
             }
 
-            // Upload and save the new image
             $image = $request->file('image');
             $originalName = $image->getClientOriginalName();
-            $imageName = str_replace(' ', '-', $originalName); // Replace spaces with "-"
+            $imageName = str_replace(' ', '-', $originalName);
             $imagePath = $image->storeAs('images', $imageName, 'public');
             $product->image = $imagePath;
         }
 
-        // Update other product details
         $product->name = $request->input('name', $product->name);
         $product->category_id = $request->input('category_id', $product->category_id);
         $product->description = $request->input('description', $product->description);
         $product->updated_by = auth()->id();
 
-        // Save changes
         $product->save();
 
-        // Retrieve category details for the response
         $category = Categories::find($product->category_id);
 
         $productDetails = [
@@ -189,7 +181,7 @@ class ProductController extends Controller
             'product_name' => $product->name,
             'product_sku' => $product->sku,
             'product_category_id' => $product->category_id,
-            'product_category' => $category->name, // Assuming there's a 'name' attribute in the Category model
+            'product_category' => $category->name,
             'product_description' => $product->description,
             'image_path' => $product->image,
         ];
@@ -210,12 +202,12 @@ class ProductController extends Controller
      */
     public function destroy(Products $product)
     {
-        // Delete the product image file
+
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
         }
 
-        // Soft delete the product
+
         $product->delete();
 
         return response()->json(['status_code' => 200, 'message' => 'Product soft deleted successfully'], 200);
@@ -223,15 +215,15 @@ class ProductController extends Controller
 
     public function restore($productId)
     {
-        // Find the soft-deleted product by its ID
+
         $product = Products::withTrashed()->find($productId);
 
-        // Check if the product is soft-deleted
+
         if (!$product) {
             return response()->json(['status_code' => 404, 'message' => 'Product not found'], 404);
         }
 
-        // Restore the soft-deleted product
+
         $product->restore();
 
         return response()->json(['status_code' => 200, 'message' => 'Product restored successfully'], 200);
