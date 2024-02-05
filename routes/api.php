@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -32,9 +31,15 @@ Route::delete('/categories/{category}', [CategoriesController::class, 'destroy']
 
 Route::get('/products', [ProductController::class, 'index']);
 
+
 Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('users/', [UserController::class, 'index']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::post('product', [ProductController::class, 'store']);
+    Route::put('/product/{product}', [ProductController::class, 'update']);
+    Route::delete('/product/{product}', [ProductController::class, 'destroy']);
+    Route::put('/product/restore/{product}', [ProductController::class, 'restore']);
 });
 
 

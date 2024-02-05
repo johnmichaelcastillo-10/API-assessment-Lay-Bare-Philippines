@@ -112,7 +112,6 @@ class CategoriesController extends Controller
             'product_manager_id' => 'int'
         ]);
 
-        // dd($categories);
 
         if ($validator->fails()) {
             return response()->json([

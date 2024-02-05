@@ -1,10 +1,12 @@
 <?php
 
+
 namespace App\Http\Controllers;
+
+use App\Http\Controllers\Controller;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -58,10 +60,10 @@ class AuthController extends Controller
             'password' => 'required|string'
         ]);
 
-        // Check username
+
         $user = User::where('username', $fields['username'])->first();
 
-        // Check password
+
         if (!$user || !Hash::check($fields['password'], $user->password)) {
             return response([
                 'message' => 'Bad Credentials'
